@@ -1,7 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const connectDB = require("./config/db");
 const cors = require("cors");
+const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
 const eventRoutes = require("./routes/eventRoutes");
@@ -12,43 +12,43 @@ connectDB();
 
 const app = express();
 
-app.use((req, res, next) => {
-  const allowedOrigins = [
-    "http://localhost:3000",                
-    "https://slot-swapper.vercel.app"      
-  ];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://slot-swapper.vercel.app",
+  "https://slot-swapper-pi-nine.vercel.app",
+  "https://slot-swapper-o0lv0b3vw-yashs-projects-dd18ababb.vercel.app",
+  "https://slot-swapper-3ps4zg91y-yashs-projects-dd18ababb.vercel.app"
+];
 
-  const origin = req.headers.origin;
-  const isVercel = origin && origin.endsWith(".vercel.app");
-
-  if (!origin || allowedOrigins.includes(origin) || isVercel) {
-    res.header("Access-Control-Allow-Origin", origin || "*");
-    res.header("Vary", "Origin");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.header("Access-Control-Allow-Credentials", "true");
-  } else {
-    res.header("Access-Control-Allow-Origin", "null");
-  }
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log("❌ Blocked by CORS:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("SlotSwapper API is running...");
+  res.send("✅ SlotSwapper API is running successfully!");
 });
 
 app.use("/api/auth", authRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/swaps", swapRoutes);
 
+app.use("*", (req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
+
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
+  console.log(`🚀 Server live on port ${PORT}`);
 });
