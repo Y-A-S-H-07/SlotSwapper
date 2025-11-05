@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5001/api", // 👈 updated port
+  baseURL: "https://slotswapper-production.up.railway.app/", // 👈 updated port
   headers: { "Content-Type": "application/json" },
 });
 
