@@ -15,7 +15,7 @@ const app = express();
 // ✅ Allow local frontend
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://slotswapper-frontend-905p.onrender.com",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
